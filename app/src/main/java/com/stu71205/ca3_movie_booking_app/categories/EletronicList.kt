@@ -14,81 +14,48 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.stu71205.ca3_movie_booking_app.navigation.Routes
-import com.stu71205.ca3_movie_booking_app.services.Electronics
-import com.stu71205.ca3_movie_booking_app.services.ElectronicsService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
-fun ElectronicList(navController: NavHostController) {
-    var electronics by remember { mutableStateOf(emptyList<Electronics>()) }
+fun ElectronicList(navController: NavHostController, electronicViewModel: ElectronicViewModel) {
 
     LaunchedEffect(Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val retrofit = Retrofit.Builder()
-                .baseUrl("https://fakestoreapi.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-            val electronicsService = retrofit.create(ElectronicsService::class.java)
-            electronics = electronicsService.getElectronics()
-        }
+        electronicViewModel.fetchElectronics()
     }
+    val electronics by electronicViewModel.electronics.observeAsState(emptyList())
 
     LazyColumn(
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(electronics) { electronic ->
-            Electronic(
-                electronic = electronic,
-                navController = navController,
-                selectedElectronicId = electronic.id
+            val image = rememberImagePainter(data = electronic.image)
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Image(
+                painter = image,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .width(50.dp)
+                    .height(50.dp)
+                    .clickable(
+                        onClick = {
+                            navController.navigate(Routes.ProductDescriptionScreen.route)
+                        }
+                    )
             )
+            Text(text = electronic.title)
+            Text(text = electronic.price)
+            Text(text = electronic.category)
         }
     }
 }
-
-@OptIn(ExperimentalCoilApi::class)
-@Composable
-fun Electronic(
-    electronic: Electronics,
-    navController: NavHostController,
-    selectedElectronicId: String
-) {
-    val image = rememberImagePainter(data = electronic.image)
-
-    Spacer(modifier = Modifier.width(8.dp))
-
-    Image(
-        painter = image,
-        contentDescription = null,
-        modifier = Modifier
-            .fillMaxWidth()
-            .width(50.dp)
-            .height(50.dp)
-            .clickable(
-                onClick = {
-                    if ((electronic.id).toInt() == selectedElectronicId.toInt()) {
-                        navController.navigate(Routes.ShowDescription.route)
-                    }
-                }
-            )
-    )
-    Text(text = electronic.title)
-    Text(text = electronic.price)
-    Text(text = electronic.category)
-}
-
-

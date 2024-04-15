@@ -75,5 +75,9 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("io.coil-kt:coil-compose:1.3.0")
 
+    implementation("androidx.compose.runtime:runtime:1.6.5")
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.5")
+    implementation("androidx.compose.runtime:runtime-rxjava2:1.6.5")
+
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
 }
