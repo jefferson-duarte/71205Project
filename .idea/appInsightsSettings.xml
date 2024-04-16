@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.stu71205.ca3_movie_booking_app" />
+                  <option name="mobileSdkAppId" value="1:428605429614:android:c1fe85dfaebdaea9cfd37f" />
+                  <option name="projectId" value="project-shopping-online" />
+                  <option name="projectNumber" value="428605429614" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

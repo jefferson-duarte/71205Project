@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import com.stu71205.ca3_movie_booking_app.services.CategoriesListScreen
+import com.stu71205.ca3_movie_booking_app.ui.theme.PartBottomBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,8 +44,8 @@ fun Home(navController: NavHostController) {
             BottomAppBar (
                 containerColor = Color.Gray,
                 contentColor = Color.White,
-
                 ){
+                PartBottomBar(navController)
             }
         },
     ) {innerPadding ->
@@ -53,7 +54,6 @@ fun Home(navController: NavHostController) {
                 .fillMaxSize()
                 .padding(innerPadding)
                 .background(color = Color.White)
-//                .verticalScroll(rememberScrollState())
         ){
             Column(
                 modifier = Modifier
@@ -66,19 +66,7 @@ fun Home(navController: NavHostController) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-//                        Text(text = "A")
                     CategoriesListScreen(navController)
-//                        ProductListScreen()
-//                    ElectronicList()
-//                        MovieScree1(onClick = {
-//                            navController.navigate(Routes.FirstScreen.route)
-//                        })
-//
-//                        Spacer(modifier = Modifier.width(40.dp))
-//
-//                        MovieScree2(onClick = {
-//                            navController.navigate(Routes.SecondScreen.route)
-//                        })
                 }
             }
         }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "428605429614",
+    "project_id": "project-shopping-online",
+    "storage_bucket": "project-shopping-online.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:428605429614:android:c1fe85dfaebdaea9cfd37f",
+        "android_client_info": {
+          "package_name": "com.stu71205.ca3_movie_booking_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtIL1rqAkuFI33gRmTHuIhtFC8vdpW2lc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
