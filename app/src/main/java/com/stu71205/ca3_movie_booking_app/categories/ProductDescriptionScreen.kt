@@ -1,107 +1,161 @@
 package com.stu71205.ca3_movie_booking_app.categories
 
-import android.os.Bundle
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.annotation.ExperimentalCoilApi
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.navigation.NavDeepLinkRequest
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import coil.compose.rememberImagePainter
+import com.stu71205.ca3_movie_booking_app.R
 import com.stu71205.ca3_movie_booking_app.navigation.Routes
+import com.stu71205.ca3_movie_booking_app.PartBottomBar
 
-
-@Composable
-fun ShowDescription(navController: NavHostController) {
-}
-
+@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalCoilApi
 @Composable
-fun ProductDescription(navController: NavHostController, electronicViewModel: ElectronicViewModel) {
-    LaunchedEffect(Unit) {
-        electronicViewModel.fetchElectronics()
-    }
+fun ProductDescription(navController: NavHostController) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Gray,
+                    titleContentColor = Color.White,
+                ),
+                title = {
+                    Row (
+                        modifier = Modifier
+                            .fillMaxWidth(0.87f)
+                    ){
 
-    val electronics by electronicViewModel.electronics.observeAsState(emptyList())
+                        Text(
+                            "WD 2TB Elements",
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                }
+            )
+        },
+        bottomBar = {
+            BottomAppBar (
+                containerColor = Color.Gray,
+                contentColor = Color.White,
+            ){
+                PartBottomBar(navController)
+            }
+        },
+    ) {innerPadding ->
+        Column(
+            modifier = Modifier
+                .background(color = Color.White)
+                .padding(innerPadding)
+                .fillMaxSize(),
+//            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ){
 
-    LazyColumn {
-        items(electronics) { electronic ->
-            Column() {
-                Text(text = electronic.title)
+            Image(
+                painter = rememberImagePainter(data = "Product Image"),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(200.dp)
+                    .clip(RoundedCornerShape(8.dp))
+            )
+
+            Text(
+                text = "WD 2TB Elements",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+
+            Text(
+                text = "Product Description",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+
+            Text(
+                text = "Price: €64.00",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(vertical = 16.dp)
+            ) {
+
+                var quantity by remember { mutableStateOf(1) }
+                OutlinedButton(
+                    onClick = { if (quantity > 1) quantity-- },
+                    modifier = Modifier.padding(end = 16.dp)
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .requiredSize(20.dp),
+                        painter = painterResource(id = R.drawable.minus),
+                        contentDescription = "minus"
+                    )
+                }
+                Text(
+                    text = quantity.toString(),
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+                OutlinedButton(
+                    onClick = { quantity++ },
+                    modifier = Modifier.padding(start = 16.dp)
+                ) {
+                    Icon(
+                        Icons.Filled.Add,
+                        contentDescription = "Add"
+                    )
+                }
+            }
+
+            Row (
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(vertical = 16.dp)
+            ) {
+                Button(onClick = {
+                    navController.navigate(Routes.CartSummaryScreen.route)
+                }) {
+                    Text(text = "Buy")
+                }
             }
         }
     }
 }
-//
-//    Spacer(modifier = Modifier.width(8.dp))
-//
-//    Text(text = "title")
-//    Text(text = "price")
-//    Text(text = "category")
-//
-//    val quantity by remember { mutableIntStateOf(1) }
-//    Column(
-//        modifier = Modifier.padding(16.dp),
-//        verticalArrangement = Arrangement.spacedBy(8.dp),
-//        horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//            Text(
-//                text = "",
-//                style = TextStyle(fontSize = 16.sp),
-//                textAlign = TextAlign.Center,
-//                modifier = Modifier.fillMaxWidth()
-//            )
-//
-//            Row(verticalAlignment = Alignment.CenterVertically) {
-//                Button(
-//                    onClick = { },
-//                    enabled = quantity > 1
-//                ) {
-//                    Text(text = "-")
-//                }
-//
-//                Text(text = quantity.toString())
-//
-//                Button(
-//                    onClick = {}
-//                ) {
-//                    Text(text = "+")
-//                }
-//            }
-//
-//            Button(
-//                onClick = {}
-//            ) {
-//                Text(text = "Comprar")
-//            }
-//
-//            Spacer(modifier = Modifier.height(16.dp))
-//
-////            Button(
-////                onClick = { navController.popBackStack() }
-////            ) {
-////                Text(text = "Voltar")
-////            }
-//        }
-//}

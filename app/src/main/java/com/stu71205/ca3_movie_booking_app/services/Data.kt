@@ -1,5 +1,12 @@
 package com.stu71205.ca3_movie_booking_app.services
 
+data class Product(
+    val id: Int,
+    val name: String,
+    val price: Double,
+    val quantity: Int
+)
+
 data class Electronics(
     val id: String,
     val title: String,
