@@ -1,6 +1,7 @@
 package com.stu71205.ca3_movie_booking_app.services
 
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface CategoriesService {
     @GET("/products/categories")
@@ -25,4 +26,9 @@ interface MenClothingService {
 interface WomenClothingService {
     @GET("/products/category/women's%20clothing")
     suspend fun getWomenClothing(): List<WomenClothing>
+}
+
+interface UserService {
+    @GET("users/{id}")
+    suspend fun getUser(@Path("id") id: Int): User
 }

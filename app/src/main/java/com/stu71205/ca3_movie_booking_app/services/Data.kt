@@ -42,3 +42,30 @@ data class WomenClothing(
     val description: String,
     val image: String,
 )
+
+data class User(
+    val id: Int,
+    val username: String,
+    val name: UserName,
+    val email: String,
+    val address: Address,
+    val phone: String,
+)
+
+data class UserName(
+    val firstname: String,
+    val lastname: String
+)
+
+data class Address(
+    val street: String,
+    val number: Int,
+    val city: String,
+    val zipcode: String,
+    val geolocation: Geo
+)
+
+data class Geo(
+    val lat: String,
+    val long: String
+)

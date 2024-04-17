@@ -19,6 +19,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,6 +37,11 @@ import androidx.navigation.NavHostController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.stu71205.ca3_movie_booking_app.PartBottomBar
+import com.stu71205.ca3_movie_booking_app.services.User
+import com.stu71205.ca3_movie_booking_app.services.UserService
+import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
 @Composable
@@ -76,6 +87,15 @@ fun UserDetailsScreen(navController: NavHostController) {
             }
         },
     ) { innerPadding ->
+        var user by remember { mutableStateOf<User?>(null) }
+        val coroutineScope = rememberCoroutineScope()
+
+        LaunchedEffect(Unit) {
+            coroutineScope.launch {
+                user = UserApi.service.getUser(1)
+            }
+        }
+
         Column(
             modifier = Modifier
                 .background(color = Color.White)
@@ -91,28 +111,42 @@ fun UserDetailsScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(text = "Username:", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "anamaria", style = MaterialTheme.typography.bodyMedium)
+            user?.let { Text(text = it.username, style = MaterialTheme.typography.bodyMedium) }
 
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(text = "Name:", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Ana Maria", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "${user?.name?.firstname} ${user?.name?.lastname}", style = MaterialTheme.typography.bodyMedium)
+
+            Text(text = "Email:", style = MaterialTheme.typography.bodyLarge)
+            user?.let { Text(text = it.email, style = MaterialTheme.typography.bodyMedium) }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(text = "Address:", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "01, Street Avenue", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "Sao Paulo, D01-D123", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "${user?.address?.number}, ${user?.address?.street}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "${user?.address?.city}, ${user?.address?.zipcode}", style = MaterialTheme.typography.bodyMedium)
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(text = "Phone:", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "132456798", style = MaterialTheme.typography.bodyMedium)
+            user?.let { Text(text = it.phone, style = MaterialTheme.typography.bodyMedium) }
         }
     }
 }
 
+object UserApi {
+    private const val BASE_URL = "https://fakestoreapi.com/"
 
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val service: UserService by lazy {
+        retrofit.create(UserService::class.java)
+    }
+}
 
 @Composable
 fun RandomPersonImage() {
