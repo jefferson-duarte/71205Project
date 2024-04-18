@@ -22,12 +22,12 @@ import androidx.navigation.NavHostController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.stu71205.ca3_movie_booking_app.models.ElectronicViewModel
-import com.stu71205.ca3_movie_booking_app.models.ProductViewModel
 import com.stu71205.ca3_movie_booking_app.navigation.Routes
+import com.stu71205.ca3_movie_booking_app.services.Electronics
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun ElectronicList(navController: NavHostController) {
+fun ElectronicList(navController: NavHostController, onElectronicClicked: (Electronics) -> Unit) {
     val viewModel: ElectronicViewModel = viewModel()
 
     LaunchedEffect(Unit) {
@@ -43,7 +43,7 @@ fun ElectronicList(navController: NavHostController) {
             Column(
                 modifier = Modifier
                     .clickable {
-                        navController.navigate(Routes.ProductListScreen.route)
+                        onElectronicClicked(electronic)
                     }
                     .fillMaxWidth()
                     .padding(16.dp)
@@ -61,8 +61,10 @@ fun ElectronicList(navController: NavHostController) {
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
+                val price = electronic.price.toDouble()
+
                 Text(
-                    text = electronic.price,
+                    text = "Price: €${String.format("%.2f", price)}",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )

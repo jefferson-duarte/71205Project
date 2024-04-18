@@ -1,7 +1,6 @@
 package com.stu71205.ca3_movie_booking_app.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -33,7 +32,9 @@ fun AppNavigation() {
 
         composable(route = Routes.ElectronicListScreen.route)
         {
-            ElectronicList(navController = navController)
+            ElectronicList(navController = navController) { electronic ->
+                navController.navigate("${Routes.ProductDescriptionScreen.route}/${electronic.id}")
+            }
         }
 
         composable(route = Routes.JeweleryListScreen.route)
@@ -51,10 +52,11 @@ fun AppNavigation() {
             WomenClothingList(navController = navController)
         }
 
-        composable(route = Routes.ProductDescriptionScreen.route)
-        {
-            ProductDescription(navController = navController)
+        composable(route = Routes.ProductDescriptionScreen.route + "/{productId}") { backStackEntry ->
+            val productId = backStackEntry.arguments?.getString("productId")
+            ProductDescription(navController = navController, productId = productId)
         }
+
 //        composable(route = Routes.CartSummaryScreen.route)
 //        {
 //            CartSummaryScreen(navController = navController)

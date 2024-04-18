@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomAppBar
@@ -23,7 +25,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,15 +41,27 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.stu71205.ca3_movie_booking_app.R
 import com.stu71205.ca3_movie_booking_app.navigation.Routes
 import com.stu71205.ca3_movie_booking_app.PartBottomBar
+import com.stu71205.ca3_movie_booking_app.models.ProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalCoilApi
 @Composable
-fun ProductDescription(navController: NavHostController) {
+fun ProductDescription(navController: NavHostController, productId: String?) {
+
+    val productViewModel: ProductViewModel = viewModel()
+
+    LaunchedEffect(Unit) {
+        productViewModel.fetchProducts()
+    }
+    val products by productViewModel.products.observeAsState()
+
+    val productDetail = products?.find { it.id.toString() == productId }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -59,13 +75,15 @@ fun ProductDescription(navController: NavHostController) {
                             .fillMaxWidth(0.87f)
                     ){
 
-                        Text(
-                            "WD 2TB Elements",
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold,
-                        )
+                        if (productDetail != null) {
+                            Text(
+                                "Product Description",
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
                     }
                 }
             )
@@ -83,36 +101,67 @@ fun ProductDescription(navController: NavHostController) {
             modifier = Modifier
                 .background(color = Color.White)
                 .padding(innerPadding)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
 //            verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally,
         ){
-
-            Image(
-                painter = rememberImagePainter(data = "Product Image"),
-                contentDescription = null,
+            Row (
                 modifier = Modifier
-                    .size(200.dp)
-                    .clip(RoundedCornerShape(8.dp))
-            )
+                    .padding(16.dp)
+            ){
+                if (productDetail != null) {
+                    Image(
+                        painter = rememberImagePainter(data = productDetail.image),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(200.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                    )
+                }
+            }
 
-            Text(
-                text = "WD 2TB Elements",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
+            Row (
+                modifier = Modifier
+                    .padding(16.dp)
+            ){
+                if (productDetail != null) {
+                    Text(
+                        text = productDetail.title,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+            }
 
-            Text(
-                text = "Product Description",
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
+            Row (
+                modifier = Modifier
+                    .padding(16.dp)
+            ){
+                val price = productDetail?.price?.toDouble()
 
-            Text(
-                text = "Price: €64.00",
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
+                if (productDetail != null) {
+                    Text(
+//                        text = "Price: €${price}",
+                        text = "Price: €${String.format("%.2f", price)}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+            }
+
+            Row (
+                modifier = Modifier
+                    .padding(16.dp)
+            ){
+                if (productDetail != null) {
+                    Text(
+                        text = productDetail.description,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+            }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
