@@ -46,6 +46,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
 @Composable
 fun UserDetailsScreen(navController: NavHostController) {
+    var user by remember { mutableStateOf<User?>(null) }
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        coroutineScope.launch {
+            user = UserApi.service.getUser(1)
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -68,7 +76,7 @@ fun UserDetailsScreen(navController: NavHostController) {
                         )
 
                         Text(
-                            "USER DETAILS",
+                            "Welcome - ${user?.name?.firstname} ${user?.name?.lastname}",
                             modifier = Modifier
                                 .fillMaxWidth(),
                             textAlign = TextAlign.Center,
@@ -87,15 +95,6 @@ fun UserDetailsScreen(navController: NavHostController) {
             }
         },
     ) { innerPadding ->
-        var user by remember { mutableStateOf<User?>(null) }
-        val coroutineScope = rememberCoroutineScope()
-
-        LaunchedEffect(Unit) {
-            coroutineScope.launch {
-                user = UserApi.service.getUser(1)
-            }
-        }
-
         Column(
             modifier = Modifier
                 .background(color = Color.White)

@@ -32,3 +32,8 @@ interface UserService {
     @GET("users/{id}")
     suspend fun getUser(@Path("id") id: Int): User
 }
+
+interface ProductService {
+    @GET("products")
+    suspend fun getProducts(): List<Product>
+}

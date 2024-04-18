@@ -1,10 +1,19 @@
 package com.stu71205.ca3_movie_booking_app.services
 
-data class Product(
+data class ProductCopy(
     val id: Int,
     val name: String,
     val price: Double,
     val quantity: Int
+)
+
+data class Product(
+    val id: Int,
+    val title: String,
+    val price: String,
+    val description: String,
+    val category: String,
+    val image: String
 )
 
 data class Electronics(
