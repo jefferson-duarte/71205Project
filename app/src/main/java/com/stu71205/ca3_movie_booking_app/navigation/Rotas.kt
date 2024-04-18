@@ -11,4 +11,5 @@ sealed class Routes (val route: String){
     object CartSummaryScreen : Routes(route = "cart_summary_screen")
     object UserDetailsScreen : Routes(route = "user_details_screen")
     object ProductListScreen : Routes(route = "product_list_screen")
+    object AboutScreen : Routes(route = "about_screen")
 }

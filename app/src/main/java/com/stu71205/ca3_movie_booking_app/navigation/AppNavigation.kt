@@ -15,6 +15,7 @@ import com.stu71205.ca3_movie_booking_app.categories.MenClothingList
 import com.stu71205.ca3_movie_booking_app.categories.ProductDescription
 import com.stu71205.ca3_movie_booking_app.categories.ProductList
 import com.stu71205.ca3_movie_booking_app.categories.WomenClothingList
+import com.stu71205.ca3_movie_booking_app.user.AboutScreen
 import com.stu71205.ca3_movie_booking_app.user.UserDetailsScreen
 
 @OptIn(ExperimentalCoilApi::class)
@@ -75,9 +76,15 @@ fun AppNavigation() {
         {
             UserDetailsScreen(navController = navController)
         }
+
         composable(route = Routes.ProductListScreen.route)
         {
             ProductList(navController = navController)
+        }
+
+        composable(route = Routes.AboutScreen.route)
+        {
+            AboutScreen(navController = navController)
         }
 
     }

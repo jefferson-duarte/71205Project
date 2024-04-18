@@ -11,8 +11,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,6 +42,7 @@ import androidx.navigation.NavHostController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.stu71205.ca3_movie_booking_app.PartBottomBar
+import com.stu71205.ca3_movie_booking_app.navigation.Routes
 import com.stu71205.ca3_movie_booking_app.services.User
 import com.stu71205.ca3_movie_booking_app.services.UserService
 import kotlinx.coroutines.launch
@@ -83,7 +89,13 @@ fun UserDetailsScreen(navController: NavHostController) {
                             fontWeight = FontWeight.Bold,
                         )
                     }
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                    }
                 }
+
             )
         },
         bottomBar = {
@@ -130,6 +142,12 @@ fun UserDetailsScreen(navController: NavHostController) {
 
             Text(text = "Phone:", style = MaterialTheme.typography.bodyLarge)
             user?.let { Text(text = it.phone, style = MaterialTheme.typography.bodyMedium) }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(onClick = { navController.navigate(Routes.AboutScreen.route) }) {
+                Text("About this app")
+            }
         }
     }
 }
