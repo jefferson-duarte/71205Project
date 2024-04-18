@@ -9,7 +9,6 @@ import coil.annotation.ExperimentalCoilApi
 import com.stu71205.ca3_movie_booking_app.Home
 //import com.stu71205.ca3_movie_booking_app.cart.CartSummaryScreen
 import com.stu71205.ca3_movie_booking_app.categories.ElectronicList
-import com.stu71205.ca3_movie_booking_app.categories.ElectronicViewModel
 import com.stu71205.ca3_movie_booking_app.categories.JeweleryList
 import com.stu71205.ca3_movie_booking_app.categories.MenClothingList
 import com.stu71205.ca3_movie_booking_app.categories.ProductDescription
@@ -34,8 +33,7 @@ fun AppNavigation() {
 
         composable(route = Routes.ElectronicListScreen.route)
         {
-            val electronicViewModel: ElectronicViewModel = viewModel()
-            ElectronicList(navController = navController, electronicViewModel = electronicViewModel)
+            ElectronicList(navController = navController)
         }
 
         composable(route = Routes.JeweleryListScreen.route)
@@ -55,7 +53,6 @@ fun AppNavigation() {
 
         composable(route = Routes.ProductDescriptionScreen.route)
         {
-            val electronicViewModel: ElectronicViewModel = viewModel()
             ProductDescription(navController = navController)
         }
 //        composable(route = Routes.CartSummaryScreen.route)

@@ -1,4 +1,4 @@
-package com.stu71205.ca3_movie_booking_app.categories
+package com.stu71205.ca3_movie_booking_app.models
 
 import android.util.Log
 import androidx.lifecycle.LiveData

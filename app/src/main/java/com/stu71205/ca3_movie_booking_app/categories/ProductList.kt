@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
+import com.stu71205.ca3_movie_booking_app.models.ProductViewModel
 import com.stu71205.ca3_movie_booking_app.navigation.Routes
 
 @Composable
