@@ -1,12 +1,14 @@
 package com.stu71205.ca3_movie_booking_app.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import coil.annotation.ExperimentalCoilApi
 import com.stu71205.ca3_movie_booking_app.Home
-//import com.stu71205.ca3_movie_booking_app.cart.CartSummaryScreen
+import com.stu71205.ca3_movie_booking_app.cart.CartSummaryScreen
 import com.stu71205.ca3_movie_booking_app.categories.ElectronicList
 import com.stu71205.ca3_movie_booking_app.categories.JeweleryList
 import com.stu71205.ca3_movie_booking_app.categories.MenClothingList
@@ -57,10 +59,17 @@ fun AppNavigation() {
             ProductDescription(navController = navController, productId = productId)
         }
 
-//        composable(route = Routes.CartSummaryScreen.route)
-//        {
-//            CartSummaryScreen(navController = navController)
-//        }
+        composable(
+            route = Routes.CartSummaryScreen.route + "/{quantity}/{totalPrice}",
+            arguments = listOf(
+                navArgument("quantity") { type = NavType.IntType },
+                navArgument("totalPrice") { type = NavType.FloatType },
+            )
+        ) { navBackStackEntry ->
+            val quantity = navBackStackEntry.arguments?.getInt("quantity") ?: 0
+            val totalPrice = navBackStackEntry.arguments?.getFloat("totalPrice") ?: 0.0f
+            CartSummaryScreen(navController = navController, quantity = quantity, totalPrice = totalPrice.toDouble())
+        }
 
         composable(route = Routes.UserDetailsScreen.route)
         {

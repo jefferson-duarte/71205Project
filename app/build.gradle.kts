@@ -74,6 +74,8 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
 
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx")
+
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

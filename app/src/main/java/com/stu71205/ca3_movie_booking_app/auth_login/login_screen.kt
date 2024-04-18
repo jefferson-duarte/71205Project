@@ -29,7 +29,7 @@ fun MyApp() {
     if (loggedInUserId.isEmpty()) {
         AuthenticationScreen(onLogin = { userId -> loggedInUserId = userId })
     } else {
-        AppNavigation()
+//        AppNavigation(cartViewModel)
 //        HomeScreen(loggedInUserId = loggedInUserId, onLogout = { loggedInUserId = "" })
     }
 }

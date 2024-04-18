@@ -14,10 +14,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -85,6 +87,11 @@ fun ProductDescription(navController: NavHostController, productId: String?) {
                             )
                         }
                     }
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                    }
                 }
             )
         },
@@ -106,6 +113,8 @@ fun ProductDescription(navController: NavHostController, productId: String?) {
 //            verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally,
         ){
+            var quantity by remember { mutableStateOf(1) }
+
             Row (
                 modifier = Modifier
                     .padding(16.dp)
@@ -142,7 +151,6 @@ fun ProductDescription(navController: NavHostController, productId: String?) {
 
                 if (productDetail != null) {
                     Text(
-//                        text = "Price: €${price}",
                         text = "Price: €${String.format("%.2f", price)}",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(vertical = 8.dp)
@@ -167,8 +175,6 @@ fun ProductDescription(navController: NavHostController, productId: String?) {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(vertical = 16.dp)
             ) {
-
-                var quantity by remember { mutableStateOf(1) }
                 OutlinedButton(
                     onClick = { if (quantity > 1) quantity-- },
                     modifier = Modifier.padding(end = 16.dp)
@@ -195,13 +201,16 @@ fun ProductDescription(navController: NavHostController, productId: String?) {
                 }
             }
 
-            Row (
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(vertical = 16.dp)
-            ) {
-                Button(onClick = {
-                    navController.navigate(Routes.CartSummaryScreen.route)
-                }) {
+            Row {
+                Button(
+                    onClick = {
+                        val totalPrice = productDetail?.price?.toDouble()?.times(quantity) ?: 0.0
+                        navController.navigate(
+                            "${Routes.CartSummaryScreen.route}/$quantity/$totalPrice"
+                        )
+                    },
+                    modifier = Modifier.padding(vertical = 16.dp)
+                ) {
                     Text(text = "Buy")
                 }
             }
