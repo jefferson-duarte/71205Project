@@ -1,6 +1,7 @@
 package com.stu71205.ca3_movie_booking_app.navigation
 
 sealed class Routes (val route: String){
+    object LoginScreen : Routes(route = "login_screen")
     object Home : Routes(route = "home_screen")
     object ShowDescription : Routes(route = "show_description_screen")
     object ElectronicListScreen : Routes(route = "electronic_screen")

@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import coil.annotation.ExperimentalCoilApi
 import com.stu71205.ca3_movie_booking_app.Home
+import com.stu71205.ca3_movie_booking_app.auth_login.MyApp
 import com.stu71205.ca3_movie_booking_app.cart.CartSummaryScreen
 import com.stu71205.ca3_movie_booking_app.categories.ElectronicList
 import com.stu71205.ca3_movie_booking_app.categories.JeweleryList
@@ -15,19 +16,25 @@ import com.stu71205.ca3_movie_booking_app.categories.MenClothingList
 import com.stu71205.ca3_movie_booking_app.categories.ProductDescription
 import com.stu71205.ca3_movie_booking_app.categories.ProductList
 import com.stu71205.ca3_movie_booking_app.categories.WomenClothingList
+import com.stu71205.ca3_movie_booking_app.models.AuthViewModel
 import com.stu71205.ca3_movie_booking_app.user.AboutScreen
 import com.stu71205.ca3_movie_booking_app.user.UserDetailsScreen
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun AppNavigation() {
+fun AppNavigation(authViewModel: AuthViewModel) {
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = Routes.Home.route,
+        startDestination = Routes.LoginScreen.route,
     )
     {
+        composable(route = Routes.LoginScreen.route)
+        {
+            MyApp(navController = navController, authViewModel = authViewModel)
+        }
+
         composable(route = Routes.Home.route)
         {
             Home(navController = navController)
