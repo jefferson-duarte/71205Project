@@ -59,7 +59,7 @@ fun Home(navController: NavHostController) {
     ) {innerPadding ->
         Column(
             modifier = Modifier
-                .background(color = Color.Yellow)
+                .background(color = Color.LightGray)
                 .padding(innerPadding)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween,

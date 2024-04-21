@@ -1,14 +1,10 @@
 package com.stu71205.ca3_movie_booking_app.models
 
-import androidx.compose.material3.Text
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     constructor() : this(AuthRepository())

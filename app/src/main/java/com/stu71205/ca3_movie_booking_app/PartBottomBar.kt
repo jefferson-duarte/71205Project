@@ -33,7 +33,7 @@ fun PartBottomBar(navController: NavController){
                     .size(35.dp)
             )
         }
-        IconButton(onClick = {navController.navigate(Routes.CartSummaryScreen.route)}) {
+        IconButton( { } ) {
             Icon(
                 Icons.Default.ShoppingCart,
                 contentDescription = "ShoppingCart",

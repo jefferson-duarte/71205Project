@@ -2,12 +2,14 @@ package com.stu71205.ca3_movie_booking_app.categories
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,25 +32,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import coil.annotation.ExperimentalCoilApi
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.stu71205.ca3_movie_booking_app.R
-import com.stu71205.ca3_movie_booking_app.navigation.Routes
 import com.stu71205.ca3_movie_booking_app.PartBottomBar
+import com.stu71205.ca3_movie_booking_app.R
 import com.stu71205.ca3_movie_booking_app.models.ProductViewModel
+import com.stu71205.ca3_movie_booking_app.navigation.Routes
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalCoilApi
@@ -103,93 +106,80 @@ fun ProductDescription(navController: NavHostController, productId: String?) {
                 PartBottomBar(navController)
             }
         },
-    ) {innerPadding ->
+    )
+    {innerPadding ->
+
         Column(
             modifier = Modifier
                 .background(color = Color.White)
                 .padding(innerPadding)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
-//            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ){
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             var quantity by remember { mutableStateOf(1) }
 
-            Row (
+            Box(
                 modifier = Modifier
                     .padding(16.dp)
-            ){
-                if (productDetail != null) {
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(color = Color.LightGray)
+                    .padding(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Image(
-                        painter = rememberImagePainter(data = productDetail.image),
+                        painter = rememberImagePainter(data = productDetail?.image),
                         contentDescription = null,
                         modifier = Modifier
-                            .size(200.dp)
+                            .fillMaxWidth()
+                            .height(200.dp)
                             .clip(RoundedCornerShape(8.dp))
                     )
-                }
-            }
 
-            Row (
-                modifier = Modifier
-                    .padding(16.dp)
-            ){
-                if (productDetail != null) {
+                    Spacer(modifier = Modifier.height(16.dp))
+
                     Text(
-                        text = productDetail.title,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(vertical = 8.dp)
+                        text = productDetail?.title ?: "",
+                        style = MaterialTheme.typography.headlineLarge,
+                        modifier = Modifier.padding(bottom = 8.dp)
                     )
-                }
-            }
 
-            Row (
-                modifier = Modifier
-                    .padding(16.dp)
-            ){
-                val price = productDetail?.price?.toDouble()
-
-                if (productDetail != null) {
                     Text(
-                        text = "Price: €${String.format("%.2f", price)}",
+                        text = "Price: €${String.format("%.2f", productDetail?.price?.toDouble() ?: 0.0)}",
                         style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(vertical = 8.dp)
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+
+                    Text(
+                        text = productDetail?.description ?: "",
+                        style = MaterialTheme.typography.bodyLarge
                     )
                 }
             }
 
-            Row (
-                modifier = Modifier
-                    .padding(16.dp)
-            ){
-                if (productDetail != null) {
-                    Text(
-                        text = productDetail.description,
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(vertical = 8.dp)
-                    )
-                }
-            }
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(vertical = 16.dp)
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 OutlinedButton(
                     onClick = { if (quantity > 1) quantity-- },
                     modifier = Modifier.padding(end = 16.dp)
                 ) {
-                    Image(
-                        modifier = Modifier
-                            .requiredSize(20.dp),
+                    Icon(
                         painter = painterResource(id = R.drawable.minus),
-                        contentDescription = "minus"
+                        contentDescription = "Minus",
+                        modifier = Modifier.size(24.dp)
                     )
                 }
+
                 Text(
                     text = quantity.toString(),
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
+
                 OutlinedButton(
                     onClick = { quantity++ },
                     modifier = Modifier.padding(start = 16.dp)
@@ -201,18 +191,20 @@ fun ProductDescription(navController: NavHostController, productId: String?) {
                 }
             }
 
-            Row {
-                Button(
-                    onClick = {
-                        val totalPrice = productDetail?.price?.toDouble()?.times(quantity) ?: 0.0
-                        navController.navigate(
-                            "${Routes.CartSummaryScreen.route}/$quantity/$totalPrice"
-                        )
-                    },
-                    modifier = Modifier.padding(vertical = 16.dp)
-                ) {
-                    Text(text = "Buy")
-                }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    val totalPrice = productDetail?.price?.toDouble()?.times(quantity) ?: 0.0
+                    navController.navigate(
+                        "${Routes.CartSummaryScreen.route}/$quantity/$totalPrice"
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(text = "Buy")
             }
         }
     }
