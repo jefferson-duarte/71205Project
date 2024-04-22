@@ -49,17 +49,23 @@ fun AppNavigation(authViewModel: AuthViewModel) {
 
         composable(route = Routes.JeweleryListScreen.route)
         {
-            JeweleryList(navController = navController)
+            JeweleryList(navController = navController) { jewelery ->
+                navController.navigate("${Routes.ProductDescriptionScreen.route}/${jewelery.id}")
+            }
         }
 
         composable(route = Routes.MenClothingListScreen.route)
         {
-            MenClothingList(navController = navController)
+            MenClothingList(navController = navController) { menClothing ->
+                navController.navigate("${Routes.ProductDescriptionScreen.route}/${menClothing.id}")
+            }
         }
 
         composable(route = Routes.WomenClothingListScreen.route)
         {
-            WomenClothingList(navController = navController)
+            WomenClothingList(navController = navController) { womenClothing ->
+                navController.navigate("${Routes.ProductDescriptionScreen.route}/${womenClothing.id}")
+            }
         }
 
         composable(route = Routes.ProductDescriptionScreen.route + "/{productId}") { backStackEntry ->

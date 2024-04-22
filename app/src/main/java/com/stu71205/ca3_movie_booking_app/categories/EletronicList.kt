@@ -46,7 +46,7 @@ import com.stu71205.ca3_movie_booking_app.services.Electronics
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ElectronicList(navController: NavHostController, onElectronicClicked: (Electronics) -> Unit) {
+fun ElectronicList(navController: NavHostController, onClicked: (Electronics) -> Unit) {
     val viewModel: ElectronicViewModel = viewModel()
 
     LaunchedEffect(Unit) {
@@ -62,10 +62,10 @@ fun ElectronicList(navController: NavHostController, onElectronicClicked: (Elect
                     titleContentColor = Color.White,
                 ),
                 title = {
-                    Row (
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                    ){
+                    ) {
                         Text(
                             "ELECTRONICS",
                             modifier = Modifier
@@ -73,7 +73,8 @@ fun ElectronicList(navController: NavHostController, onElectronicClicked: (Elect
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold,
                         )
-                    }                },
+                    }
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
@@ -101,7 +102,7 @@ fun ElectronicList(navController: NavHostController, onElectronicClicked: (Elect
                 Box(
                     modifier = Modifier
                         .clickable {
-                            onElectronicClicked(electronic)
+                            onClicked(electronic)
                         }
                         .padding(8.dp)
                         .fillMaxWidth()

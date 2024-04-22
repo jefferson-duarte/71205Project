@@ -7,17 +7,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stu71205.ca3_movie_booking_app.services.Electronics
 import com.stu71205.ca3_movie_booking_app.services.ElectronicsService
+import com.stu71205.ca3_movie_booking_app.services.WomenClothing
+import com.stu71205.ca3_movie_booking_app.services.WomenClothingService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class ElectronicViewModel : ViewModel() {
-    private val _electronics = MutableLiveData<List<Electronics>>()
-    val electronics: LiveData<List<Electronics>> = _electronics
+class WomenClothingViewModel : ViewModel() {
+    private val _womenClothing = MutableLiveData<List<WomenClothing>>()
+    val womenClothing: LiveData<List<WomenClothing>> = _womenClothing
 
-    fun fetchElectronics() {
+    fun fetchWomenClothing() {
         viewModelScope.launch {
             try {
                 val fetchedElectronics = withContext(Dispatchers.IO) {
@@ -25,12 +27,12 @@ class ElectronicViewModel : ViewModel() {
                         .baseUrl("https://fakestoreapi.com")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build()
-                    val electronicsService = retrofit.create(ElectronicsService::class.java)
-                    electronicsService.getElectronics()
+                    val womenClothingService = retrofit.create(WomenClothingService::class.java)
+                    womenClothingService.getWomenClothing()
                 }
-                _electronics.value = fetchedElectronics
+                _womenClothing.value = fetchedElectronics
             } catch (e: Exception) {
-                Log.e("ElectronicViewModel", "Error to get electronics", e)
+                Log.e("WomenClothingViewModel", "Error to get women clothing", e)
             }
         }
     }

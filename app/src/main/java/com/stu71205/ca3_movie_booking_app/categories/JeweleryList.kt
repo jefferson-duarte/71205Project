@@ -1,85 +1,148 @@
 package com.stu71205.ca3_movie_booking_app.categories
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.stu71205.ca3_movie_booking_app.navigation.Routes
+import com.stu71205.ca3_movie_booking_app.PartBottomBar
+import com.stu71205.ca3_movie_booking_app.models.JeweleryViewModel
 import com.stu71205.ca3_movie_booking_app.services.Jeweleries
-import com.stu71205.ca3_movie_booking_app.services.JeweleriesService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JeweleryList(navController: NavHostController) {
-    var jeweleries by remember { mutableStateOf(emptyList<Jeweleries>()) }
+fun JeweleryList(navController: NavHostController, onClicked: (Jeweleries) -> Unit) {
+    val viewModel: JeweleryViewModel = viewModel()
 
     LaunchedEffect(Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val retrofit = Retrofit.Builder()
-                .baseUrl("https://fakestoreapi.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-            val jeweleriesService = retrofit.create(JeweleriesService::class.java)
-            jeweleries = jeweleriesService.getJeweleries()
-        }
+        viewModel.fetchJewelery()
     }
+    val jeweleries by viewModel.jeweleries.observeAsState(emptyList())
 
-    LazyColumn(
-        modifier = Modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(jeweleries) { jewelery ->
-            Jewelery(jewelery = jewelery, navController = navController)
-        }
-    }
-}
-
-
-@OptIn(ExperimentalCoilApi::class)
-@Composable
-fun Jewelery(jewelery: Jeweleries, navController: NavHostController) {
-    val image = rememberImagePainter(data = jewelery.image)
-
-    Spacer(modifier = Modifier.width(8.dp))
-
-    Image(
-        painter = image,
-        contentDescription = null,
-        modifier = Modifier
-            .fillMaxWidth()
-            .width(50.dp)
-            .height(50.dp)
-            .clickable(
-                onClick = {
-                    navController.navigate(Routes.ShowDescription.route)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Gray,
+                    titleContentColor = Color.White,
+                ),
+                title = {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            "JEWELERY",
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                    }
                 }
             )
-    )
-    Text(text = jewelery.title)
-    Text(text = jewelery.price)
-    Text(text = jewelery.category)
+        },
+        bottomBar = {
+            BottomAppBar (
+                containerColor = Color.Gray,
+                contentColor = Color.White,
+            ){
+                PartBottomBar(navController)
+            }
+        },
+    ) { innerPadding ->
+        LazyVerticalGrid(
+            GridCells.Adaptive(minSize = 220.dp),
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .background(color = Color.LightGray)
+        ) {
+            itemsIndexed(jeweleries) { index, jewelery ->
+                Box(
+                    modifier = Modifier
+                        .clickable {
+                            onClicked(jewelery)
+                        }
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                        .background(color = Color.White)
+                        .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(8.dp))
+                ) {
+                    Column(
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        Image(
+                            painter = rememberImagePainter(data = jewelery.image),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .clip(shape = RoundedCornerShape(8.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+
+                        Text(
+                            text = jewelery.title,
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(vertical = 4.dp)
+                        )
+
+                        Text(
+                            text = "€${String.format("%.2f", jewelery.price.toDouble())}",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(vertical = 4.dp)
+                        )
+
+                        Text(
+                            text = jewelery.category,
+                            style = MaterialTheme.typography.titleSmall,
+                            modifier = Modifier.padding(vertical = 4.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
-
-

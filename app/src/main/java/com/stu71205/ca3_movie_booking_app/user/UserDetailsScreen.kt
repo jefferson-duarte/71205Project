@@ -2,15 +2,16 @@ package com.stu71205.ca3_movie_booking_app.user
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.BottomAppBar
@@ -32,14 +33,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.stu71205.ca3_movie_booking_app.PartBottomBar
 import com.stu71205.ca3_movie_booking_app.navigation.Routes
@@ -49,7 +51,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserDetailsScreen(navController: NavHostController) {
     var user by remember { mutableStateOf<User?>(null) }
@@ -73,14 +75,6 @@ fun UserDetailsScreen(navController: NavHostController) {
                         modifier = Modifier.fillMaxWidth(0.87f)
 
                     ) {
-
-                        Image(
-                            painter = rememberImagePainter(data = "Product Image"),
-                            contentDescription = "Logo",
-                            modifier = Modifier
-                                .size(40.dp)
-                        )
-
                         Text(
                             "Welcome - ${user?.name?.firstname} ${user?.name?.lastname}",
                             modifier = Modifier
@@ -109,46 +103,47 @@ fun UserDetailsScreen(navController: NavHostController) {
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .background(color = Color.White)
+                .fillMaxSize()
+                .background(Color.LightGray)
                 .padding(innerPadding)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            RandomPersonImage()
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.LightGray),
+                contentAlignment = Alignment.Center
+            ) {
+                RandomPersonImage()
+            }
 
-            Text(text = "User Details", style = MaterialTheme.typography.headlineLarge)
+            UserDetailCard(label = "Username:", value = user?.username ?: "-")
+            UserDetailCard(label = "Name:", value = "${user?.name?.firstname ?: ""} ${user?.name?.lastname ?: ""}")
+            UserDetailCard(label = "Email:", value = user?.email ?: "-")
+            UserDetailCard(label = "Address:", value = "${user?.address?.number ?: ""}, ${user?.address?.street ?: ""}, ${user?.address?.city ?: ""}, ${user?.address?.zipcode ?: ""}")
+            UserDetailCard(label = "Phone:", value = user?.phone ?: "-")
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(text = "Username:", style = MaterialTheme.typography.bodyLarge)
-            user?.let { Text(text = it.username, style = MaterialTheme.typography.bodyMedium) }
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(text = "Name:", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "${user?.name?.firstname} ${user?.name?.lastname}", style = MaterialTheme.typography.bodyMedium)
-
-            Text(text = "Email:", style = MaterialTheme.typography.bodyLarge)
-            user?.let { Text(text = it.email, style = MaterialTheme.typography.bodyMedium) }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(text = "Address:", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "${user?.address?.number}, ${user?.address?.street}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "${user?.address?.city}, ${user?.address?.zipcode}", style = MaterialTheme.typography.bodyMedium)
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(text = "Phone:", style = MaterialTheme.typography.bodyLarge)
-            user?.let { Text(text = it.phone, style = MaterialTheme.typography.bodyMedium) }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Button(onClick = { navController.navigate(Routes.AboutScreen.route) }) {
+            Button(
+                onClick = { navController.navigate(Routes.AboutScreen.route) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text("About this app")
             }
         }
+    }
+}
+
+@Composable
+fun UserDetailCard(label: String, value: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = label, style = MaterialTheme.typography.bodyLarge)
+        Text(text = value, style = MaterialTheme.typography.bodyMedium)
     }
 }
 
@@ -176,7 +171,14 @@ fun RandomPersonImage() {
         painter = painter,
         contentDescription = "PersonImage",
         modifier = Modifier
-            .size(200.dp),
+            .padding(8.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .size(200.dp)
+            .border(
+                width = 2.dp,
+                color = Color.DarkGray,
+                shape = RectangleShape,
+            ),
         contentScale = ContentScale.Crop
     )
 }
