@@ -27,7 +27,7 @@ fun AppNavigation(authViewModel: AuthViewModel) {
 
     NavHost(
         navController = navController,
-        startDestination = Routes.Home.route,
+        startDestination = Routes.LoginScreen.route,
     )
     {
         composable(route = Routes.LoginScreen.route)
